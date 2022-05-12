@@ -20,5 +20,8 @@ public class Board {
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
 
+    private int replyCount;
+
+    private String mainImage;
 
 }

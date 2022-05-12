@@ -26,12 +26,12 @@
         <selectKey resultType="int" keyProperty="bno" order="AFTER">
             select last_insert_id()
         </selectKey>
-        insert into tbl_board(title, contents, writer)
-        values (#{title}, #{contents}, #{writer});
+        insert into tbl_board(title, contents, writer, mainImage)
+        values (#{title}, #{contents}, #{writer}, #{mainImage});
     </insert>
 
     <select id="selectList" resultType="org.zerock.sp1.domain.Board">
-        select bno, title, contents, writer, regDate, updateDate
+        select bno, title, contents, writer, regDate, updateDate, replyCount, mainImage
         from tbl_board
         <include refid="search"></include>
         order by bno desc
@@ -52,9 +52,15 @@
     </select>
 
     <update id="update">
-        update tbl_board set title =#{title}, contents =#{contents}, updateDate = now() where bno = #{bno}
+        update tbl_board set title =#{title}, contents =#{contents}, updateDate = now(), mainImage = #{mainImage} where bno = #{bno}
     </update>
 
+    <update id="updateReplyCount">
+        update tbl_board set replyCount = replyCount + #{amount} where bno = #{bno}
+    </update>
 
+    <select id="selectFiles" resultType="org.zerock.sp1.domain.AttachFile">
+        select * from tbl_attach where bno = #{bno}
+    </select>
 
 </mapper>

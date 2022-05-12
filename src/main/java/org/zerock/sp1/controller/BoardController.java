@@ -1,17 +1,15 @@
 package org.zerock.sp1.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.sp1.dto.BoardDTO;
-import org.zerock.sp1.dto.ListDTO;
-import org.zerock.sp1.dto.ListResponseDTO;
-import org.zerock.sp1.dto.PageMaker;
+import org.zerock.sp1.dto.*;
 import org.zerock.sp1.service.BoardService;
+
+import java.util.Arrays;
 import java.util.List;
 
 @Log4j2
@@ -24,10 +22,10 @@ public class BoardController {
 
     @GetMapping("/")
     public String basic(){
-        return "redirect:/board/list";
+        return "redirect:/board/list2";
     }
 
-    @GetMapping("/list")
+    @GetMapping("/list2")
     public void list( ListDTO listDTO, Model model){
        log.info("board list...........");
        log.info(listDTO);
@@ -53,11 +51,10 @@ public class BoardController {
 
         log.info("-----------------------");
         log.info(boardDTO);
-
         service.register(boardDTO);
 
-        rttr.addFlashAttribute("result", "registerd");
-        return "redirect:/board/list";
+        rttr.addFlashAttribute("result", "registered");
+        return "redirect:/board/list2";
     }
 
     @GetMapping("/read/{bno}")
@@ -67,7 +64,7 @@ public class BoardController {
         log.info(listDTO);
 
         model.addAttribute("dto", service.getOne(bno));
-        return "/board/read";
+        return "/board/read2";
     }
 
     @GetMapping("/modify/{bno}")
@@ -88,13 +85,13 @@ public class BoardController {
         log.info("------------------------");
 
         rttr.addFlashAttribute("result", "removed");
-        return "redirect:/board/list";
+        return "redirect:/board/list2";
 
     }
 
     @GetMapping("/remove/{bno}")
     public String getNotSupported(){
-        return "redirect:/board/list";
+        return "redirect:/board/list2";
     }
 
     @PostMapping("/modify/{bno}")
@@ -110,6 +107,14 @@ public class BoardController {
         return "redirect:/board/read/" + bno + listDTO.getLink();
 
     }
+
+    @GetMapping("/files/{bno}")
+    @ResponseBody
+    public List<UploadResultDTO> getFiles(@PathVariable("bno")Integer bno){
+        return service.getFiles(bno);
+    }
+
+
 
 
 }
